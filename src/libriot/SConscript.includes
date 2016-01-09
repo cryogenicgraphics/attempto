@@ -1,0 +1,10 @@
+#
+# Copyright (C) 2015-2016 Cryogenic Graphics Ltd
+#
+
+Import('env')
+
+if not env.GetOption('clang-format') :
+    env.Install(env['IncludeVariantSubDir'], Glob('*.hpp'))
+    env.Install(env['IncludeVariantSubDirDetail'], Glob('detail/*.hpp'))
+

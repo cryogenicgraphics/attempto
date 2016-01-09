@@ -1,0 +1,6 @@
+buildslave create-slave -r helmsman-server-slave-fdo cryounit6:9989 helmsman-server-slave-fdo pass
+
+buildslave start helmsman-server-slave-clang-scanbuild
+
+buildbot reconfig master
+

@@ -1,0 +1,17 @@
+#
+# Copyright (C) 2015-2016 Cryogenic Graphics Ltd
+#
+
+Import('env')
+
+if not GetOption('clang-format') :
+
+    localEnv = env.Clone()
+
+    localEnv.AppendUnique(LIBS = 'riot')
+    localEnv.Append(LINKFLAGS = '-Wno-maybe-uninitialized')
+
+    unitTest = localEnv.AddUnitTest('nmea_reader', 'nmea_reader.cpp')
+else :
+    env.ClangFormat('', Glob('*.cpp'))
+

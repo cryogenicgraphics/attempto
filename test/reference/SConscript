@@ -1,0 +1,9 @@
+#
+# Copyright (C) 2015-2016 Cryogenic Graphics Ltd
+#
+
+Import('env')
+
+referenceDir = env.Install(env['ReferenceVariantSubDir'], Glob('*.*'))
+env['ReferenceDirObj'] = referenceDir
+

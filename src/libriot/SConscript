@@ -1,0 +1,14 @@
+#
+# Copyright (C) 2015-2016 Cryogenic Graphics Ltd
+#
+
+Import('env')
+
+if not env.GetOption('clang-format') :
+    env.StaticLibrary('riot', Glob('*.cpp'))
+else :
+    env.ClangFormat('', Glob('*.cpp') + Glob('*.hpp') + Glob('detail/*.hpp'))
+
+env.AppendUnique(CPPPATH = '#/' + env['VariantDir'] + '/include')
+env.AppendUnique(LIBPATH = '#/' + env['VariantDir'])
+
