@@ -29,7 +29,7 @@ inline constexpr auto shifter() noexcept { return 0; }
 
 template <class T, class... Ts, size_t n = 8>
 inline constexpr auto shifter(T t, Ts... ts) noexcept {
-  return t << sizeof...(ts) * n | shifter(ts...);
+  return t << sizeof...(ts)*n | shifter(ts...);
 }
 }
 }

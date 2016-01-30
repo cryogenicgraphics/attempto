@@ -890,7 +890,8 @@ auto skytraq::operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
     if (line[0] == 0xA0 && line[1] == 0xA1 && line[4] == 0xA8) {
       nd.fix_mode_ = fix_mode_skytraq::_3D;
       nd.satellites_in_view_ = line[6];
-      nd.gnss_week_ = detail::shifter(line[7], line[8]);
+      nd.gnss_week_ = static_cast<decltype(nd.gnss_week_)>(
+          detail::shifter(line[7], line[8]));
       nd.tow_ = static_cast<decltype(nd.tow_)>(
           detail::shifter(line[9], line[10], line[11], line[12]));
       nd.latitude_ = detail::shifter(line[13], line[14], line[15], line[16]);
@@ -899,11 +900,16 @@ auto skytraq::operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
           detail::shifter(line[21], line[22], line[23], line[24]));
       nd.diff_ = static_cast<decltype(nd.altitude_)>(
           detail::shifter(line[25], line[26], line[27], line[28]));
-      nd.gdop_ = detail::shifter(line[29], line[30]);
-      nd.pdop_ = detail::shifter(line[31], line[32]);
-      nd.hdop_ = detail::shifter(line[33], line[34]);
-      nd.vdop_ = detail::shifter(line[35], line[36]);
-      nd.tdop_ = detail::shifter(line[37], line[38]);
+      nd.gdop_ =
+          static_cast<decltype(nd.gdop_)>(detail::shifter(line[29], line[30]));
+      nd.pdop_ =
+          static_cast<decltype(nd.pdop_)>(detail::shifter(line[31], line[32]));
+      nd.hdop_ =
+          static_cast<decltype(nd.hdop_)>(detail::shifter(line[33], line[34]));
+      nd.vdop_ =
+          static_cast<decltype(nd.vdop_)>(detail::shifter(line[35], line[36]));
+      nd.tdop_ =
+          static_cast<decltype(nd.tdop_)>(detail::shifter(line[37], line[38]));
       nd.ecef_x_ = detail::shifter(line[39], line[40], line[41], line[42]);
       nd.ecef_y_ = detail::shifter(line[43], line[44], line[45], line[46]);
       nd.ecef_z_ = detail::shifter(line[47], line[48], line[49], line[50]);
