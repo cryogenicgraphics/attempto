@@ -45,8 +45,8 @@ using gnss_istream = nav::basic_gnss_istream<device_stream_traits, char>;
 namespace {
 static std::vector<char> erase_newline(std::vector<char> &vec) {
   vec.erase(std::remove_if(vec.begin(), vec.end(), [](auto c) {
-              return c == '\n';
-            }), vec.end());
+    return c == '\n';
+  }), vec.end());
   return vec;
 }
 
