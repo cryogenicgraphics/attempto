@@ -150,6 +150,7 @@ defaultCXXFlagsGCC = ['-D_GLIBCXX_USE_CXX11_ABI=0',
 defaultCXXFlagsCLANG = ['-Weverything',
                         '-Wno-c++98-compat',
                         '-Wno-c++98-compat-pedantic',
+                        '-Wno-disabled-macro-expansion',
                         '-Wno-padded']
 
 defaultEnv.AppendUnique(CPPFLAGS = commonCXXFlags)
