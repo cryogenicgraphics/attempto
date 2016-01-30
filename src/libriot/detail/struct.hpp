@@ -273,9 +273,8 @@ extract(FwdIt &it, FwdIt, T &t) noexcept {
 template <class FwdIt, class T>
 constexpr std::enable_if_t<std::is_same<T, struct tm>::value>
 extract(FwdIt &it, FwdIt, T &t) noexcept {
-  auto to_int = [](char a = '0', char b = '0') {
-    return (a - '0') * 10 + (b - '0');
-  };
+  auto to_int =
+      [](char a = '0', char b = '0') { return (a - '0') * 10 + (b - '0'); };
   memset(&t, 0, sizeof(struct tm));
   t.tm_mday = to_int(it[0], it[1]);
   it += 2;
@@ -809,8 +808,9 @@ auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
   char knots;
   char kilometers;
   return detail::extractor(
-      strm, gnss::value, [&vtg, &direction_t, &declination_t, &knots,
-                          &kilometers](const std::string &line) {
+      strm, gnss::value,
+      [&vtg, &direction_t, &declination_t, &knots, &kilometers](
+          const std::string &line) {
         detail::nmea_scanner(gnss::value, line, vtg.direction_, direction_t,
                              vtg.declination_, declination_t, vtg.speed_knots_,
                              knots, vtg.speed_kilometers_, kilometers,
@@ -890,31 +890,26 @@ auto skytraq::operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
     if (line[0] == 0xA0 && line[1] == 0xA1 && line[4] == 0xA8) {
       nd.fix_mode_ = fix_mode_skytraq::_3D;
       nd.satellites_in_view_ = line[6];
-      nd.gnss_week_ = detail::shifter<short>(line[7], line[8]);
-      nd.tow_ =
-          detail::shifter<unsigned int>(line[9], line[10], line[11], line[12]);
-      nd.latitude_ =
-          detail::shifter<int>(line[13], line[14], line[15], line[16]);
-      nd.longitude_ =
-          detail::shifter<int>(line[17], line[18], line[19], line[20]);
-      nd.altitude_ =
-          detail::shifter<unsigned int>(line[21], line[22], line[23], line[24]);
-      nd.diff_ =
-          detail::shifter<unsigned int>(line[25], line[26], line[27], line[28]);
-      nd.gdop_ = detail::shifter<unsigned short>(line[29], line[30]);
-      nd.pdop_ = detail::shifter<unsigned short>(line[31], line[32]);
-      nd.hdop_ = detail::shifter<unsigned short>(line[33], line[34]);
-      nd.vdop_ = detail::shifter<unsigned short>(line[35], line[36]);
-      nd.tdop_ = detail::shifter<unsigned short>(line[37], line[38]);
-      nd.ecef_x_ = detail::shifter<int>(line[39], line[40], line[41], line[42]);
-      nd.ecef_y_ = detail::shifter<int>(line[43], line[44], line[45], line[46]);
-      nd.ecef_z_ = detail::shifter<int>(line[47], line[48], line[49], line[50]);
-      nd.ecef_vx_ =
-          detail::shifter<int>(line[51], line[52], line[53], line[54]);
-      nd.ecef_vy_ =
-          detail::shifter<int>(line[55], line[56], line[57], line[58]);
-      nd.ecef_vz_ =
-          detail::shifter<int>(line[59], line[60], line[61], line[62]);
+      nd.gnss_week_ = detail::shifter(line[7], line[8]);
+      nd.tow_ = static_cast<decltype(nd.tow_)>(
+          detail::shifter(line[9], line[10], line[11], line[12]));
+      nd.latitude_ = detail::shifter(line[13], line[14], line[15], line[16]);
+      nd.longitude_ = detail::shifter(line[17], line[18], line[19], line[20]);
+      nd.altitude_ = static_cast<decltype(nd.altitude_)>(
+          detail::shifter(line[21], line[22], line[23], line[24]));
+      nd.diff_ = static_cast<decltype(nd.altitude_)>(
+          detail::shifter(line[25], line[26], line[27], line[28]));
+      nd.gdop_ = detail::shifter(line[29], line[30]);
+      nd.pdop_ = detail::shifter(line[31], line[32]);
+      nd.hdop_ = detail::shifter(line[33], line[34]);
+      nd.vdop_ = detail::shifter(line[35], line[36]);
+      nd.tdop_ = detail::shifter(line[37], line[38]);
+      nd.ecef_x_ = detail::shifter(line[39], line[40], line[41], line[42]);
+      nd.ecef_y_ = detail::shifter(line[43], line[44], line[45], line[46]);
+      nd.ecef_z_ = detail::shifter(line[47], line[48], line[49], line[50]);
+      nd.ecef_vx_ = detail::shifter(line[51], line[52], line[53], line[54]);
+      nd.ecef_vy_ = detail::shifter(line[55], line[56], line[57], line[58]);
+      nd.ecef_vz_ = detail::shifter(line[59], line[60], line[61], line[62]);
       break;
     }
   }

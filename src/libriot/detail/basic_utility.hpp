@@ -25,11 +25,11 @@ namespace riot {
 namespace navigation {
 namespace detail {
 
-template <class U> inline constexpr U shifter() noexcept { return U(0); }
+inline constexpr auto shifter() noexcept { return 0; }
 
-template <class U, class T, class... Ts>
-inline constexpr U shifter(T t, Ts... ts) noexcept {
-  return U(t << sizeof...(ts)*8) | shifter<U>(ts...);
+template <class T, class... Ts, size_t n = 8>
+inline constexpr auto shifter(T t, Ts... ts) noexcept {
+  return t << sizeof...(ts) * n | shifter(ts...);
 }
 }
 }
