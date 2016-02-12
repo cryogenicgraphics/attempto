@@ -25,15 +25,15 @@ namespace riot {
 namespace navigation {
 namespace detail {
 
-inline constexpr auto char_int(char c) { return c - '0'; }
+inline constexpr auto char_as_digit(char c) { return c - '0'; }
 
-template <class... Ts> inline constexpr auto seqchar_int(Ts... ts);
+template <class... Ts> inline constexpr auto char_sequence_as_int(Ts... ts);
 
-template <> inline constexpr auto seqchar_int() { return 0; }
+template <> inline constexpr auto char_sequence_as_int() { return 0; }
 
 template <class T, class... Ts>
-inline constexpr auto seqchar_int(T t, Ts... ts) {
-  return char_int(t) + seqchar_int(ts...) * 10;
+inline constexpr auto char_sequence_as_int(T t, Ts... ts) {
+  return char_as_digit(t) + char_sequence_as_int(ts...) * 10;
 }
 
 inline constexpr auto shifter() noexcept { return 0; }

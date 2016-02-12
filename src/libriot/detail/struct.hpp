@@ -72,49 +72,41 @@ namespace detail {
 template <class FwdIt, class T>
 constexpr std::enable_if_t<std::is_same<T, time_point>::value>
 extract(FwdIt &it, FwdIt, T &t) noexcept {
-  auto to_utc = [](auto beg_, auto it_) {
-    auto fn = [&] {
-      auto u = seqchar_int(beg_[1], beg_[0], '0');
-      beg_ += 2;
-      return u;
-    };
-
+  auto make_utc = [](auto beg_, auto it_) {
     const auto siz = it_ - beg_;
 
-    auto h = fn();
-    auto m = fn();
-    auto s = fn();
-    ++beg_;
+    auto h = char_sequence_as_int(beg_[1], beg_[0], '0');
+    beg_ += 2;
+    auto m = char_sequence_as_int(beg_[1], beg_[0], '0');
+    beg_ += 2;
+    auto s = char_sequence_as_int(beg_[1], beg_[0], '0');
+    beg_ += 3;
 
     int ms{0};
     switch (siz) {
     default:
       __builtin_unreachable();
-    case sizeof("hhmmss.sss") - 1: {
-      ms = seqchar_int(beg_[2], beg_[1], beg_[0]);
+    case sizeof("hhmmss.sss") - 1:
+      ms = char_sequence_as_int(beg_[2], beg_[1], beg_[0]);
+      break;
+    case sizeof("hhmmss.ss") - 1:
+      ms = char_sequence_as_int(beg_[1], beg_[0], '0');
+      break;
+    case sizeof("hhmmss.s") - 1:
+      ms = char_sequence_as_int(beg_[0], '0', '0');
+      break;
+    case sizeof("hhmmss") - 1:
       break;
     }
-    case sizeof("hhmmss.ss") - 1: {
-      ms = seqchar_int(beg_[1], beg_[0], '0');
-      break;
-    }
-    case sizeof("hhmmss.s") - 1: {
-      ms = seqchar_int(beg_[0], '0', '0');
-      break;
-    }
-    case sizeof("hhmmss") - 1: {
-      break;
-    }
-    }
-    return time_point(std::chrono::hours(h) + std::chrono::minutes(m) +
-                      std::chrono::seconds(s) + std::chrono::milliseconds(ms));
+    return time_point{std::chrono::hours(h) + std::chrono::minutes(m) +
+                      std::chrono::seconds(s) + std::chrono::milliseconds(ms)};
   };
 
   FwdIt beg = it;
   while (*it != ',') {
     ++it;
   }
-  t = to_utc(beg, it);
+  t = make_utc(beg, it);
 }
 
 template <class FwdIt, class T>
@@ -271,11 +263,11 @@ template <class FwdIt, class T>
 constexpr std::enable_if_t<std::is_same<T, struct tm>::value>
 extract(FwdIt &it, FwdIt, T &t) noexcept {
   memset(&t, 0, sizeof(struct tm));
-  t.tm_mday = seqchar_int(it[1], it[0], '0');
+  t.tm_mday = char_sequence_as_int(it[1], it[0], '0');
   it += 2;
-  t.tm_mon = seqchar_int(it[1], it[0], '0') - 1;
+  t.tm_mon = char_sequence_as_int(it[1], it[0], '0') - 1;
   it += 2;
-  t.tm_year = seqchar_int(it[1], it[0], '0') + 2000 - 1900;
+  t.tm_year = char_sequence_as_int(it[1], it[0], '0') + 2000 - 1900;
   it += 2;
 }
 
