@@ -21,9 +21,21 @@
     along with Attempto.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <utility>
+
 namespace riot {
 namespace navigation {
 namespace detail {
+
+template <char... s> using char_sequence = std::integer_sequence<char, s...>;
+
+template <char... s>
+constexpr static const char make_char_string[] = {s..., '\0'};
+
+template <char... s>
+constexpr const auto &make_char_string_from_sequence(char_sequence<s...>) {
+  return make_char_string<s...>;
+}
 
 inline constexpr auto char_as_digit(char c) { return c - '0'; }
 

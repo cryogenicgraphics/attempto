@@ -465,16 +465,8 @@ private:
                          gnssgga<gnss> &gga) -> decltype(strm);
 };
 
-struct gpgga_traits {
-  static const std::string value;
-};
-
-struct gngga_traits {
-  static const std::string value;
-};
-
-using gpgga = gnssgga<gpgga_traits>;
-using gngga = gnssgga<gngga_traits>;
+using gpgga = gnssgga<detail::char_sequence<'$', 'G', 'P', 'G', 'G', 'A'>>;
+using gngga = gnssgga<detail::char_sequence<'$', 'G', 'N', 'G', 'G', 'A'>>;
 
 template <class> class gnssgll final {
 public:
@@ -506,16 +498,8 @@ private:
                          gnssgll<gnss> &gll) -> decltype(strm);
 };
 
-struct gpgll_traits {
-  static const std::string value;
-};
-
-struct gngll_traits {
-  static const std::string value;
-};
-
-using gpgll = gnssgll<gpgll_traits>;
-using gngll = gnssgll<gngll_traits>;
+using gpgll = gnssgll<detail::char_sequence<'$', 'G', 'P', 'G', 'L', 'L'>>;
+using gngll = gnssgll<detail::char_sequence<'$', 'G', 'N', 'G', 'L', 'L'>>;
 
 template <class> class gnssgsa final {
 public:
@@ -541,26 +525,10 @@ private:
                          gnssgsa<gnss> &gsa) -> decltype(strm);
 };
 
-struct bdgsa_traits {
-  static const std::string value;
-};
-
-struct glgsa_traits {
-  static const std::string value;
-};
-
-struct gngsa_traits {
-  static const std::string value;
-};
-
-struct gpgsa_traits {
-  static const std::string value;
-};
-
-using bdgsa = gnssgsa<bdgsa_traits>;
-using glgsa = gnssgsa<glgsa_traits>;
-using gngsa = gnssgsa<gngsa_traits>;
-using gpgsa = gnssgsa<gpgsa_traits>;
+using bdgsa = gnssgsa<detail::char_sequence<'$', 'B', 'D', 'G', 'S', 'A'>>;
+using glgsa = gnssgsa<detail::char_sequence<'$', 'G', 'L', 'G', 'S', 'A'>>;
+using gngsa = gnssgsa<detail::char_sequence<'$', 'G', 'N', 'G', 'S', 'A'>>;
+using gpgsa = gnssgsa<detail::char_sequence<'$', 'G', 'P', 'G', 'S', 'A'>>;
 
 template <class> class gnssgsv final {
 public:
@@ -607,21 +575,9 @@ private:
                          gnssgsv<gnss> &gsv) -> decltype(strm);
 };
 
-struct bdgsv_traits {
-  static const std::string value;
-};
-
-struct gpgsv_traits {
-  static const std::string value;
-};
-
-struct glgsv_traits {
-  static const std::string value;
-};
-
-using bdgsv = gnssgsv<bdgsv_traits>;
-using gpgsv = gnssgsv<gpgsv_traits>;
-using glgsv = gnssgsv<glgsv_traits>;
+using bdgsv = gnssgsv<detail::char_sequence<'$', 'B', 'D', 'G', 'S', 'V'>>;
+using gpgsv = gnssgsv<detail::char_sequence<'$', 'G', 'P', 'G', 'S', 'V'>>;
+using glgsv = gnssgsv<detail::char_sequence<'$', 'G', 'L', 'G', 'S', 'V'>>;
 
 template <class> class gnssrmc final {
 public:
@@ -669,16 +625,8 @@ private:
                          gnssrmc<gnss> &rmc) -> decltype(strm);
 };
 
-struct gprmc_traits {
-  static const std::string value;
-};
-
-struct gnrmc_traits {
-  static const std::string value;
-};
-
-using gprmc = gnssrmc<gprmc_traits>;
-using gnrmc = gnssrmc<gnrmc_traits>;
+using gprmc = gnssrmc<detail::char_sequence<'$', 'G', 'P', 'R', 'M', 'C'>>;
+using gnrmc = gnssrmc<detail::char_sequence<'$', 'G', 'N', 'R', 'M', 'C'>>;
 
 template <class> class gnssvtg final {
 public:
@@ -704,16 +652,8 @@ private:
                          gnssvtg<gnss> &vtg) -> decltype(strm);
 };
 
-struct gpvtg_traits {
-  static const std::string value;
-};
-
-struct gnvtg_traits {
-  static const std::string value;
-};
-
-using gpvtg = gnssvtg<gpvtg_traits>;
-using gnvtg = gnssvtg<gnvtg_traits>;
+using gpvtg = gnssvtg<detail::char_sequence<'$', 'G', 'P', 'V', 'T', 'G'>>;
+using gnvtg = gnssvtg<detail::char_sequence<'$', 'G', 'N', 'V', 'T', 'G'>>;
 
 template <class> class gnsszda final {
 public:
@@ -739,52 +679,52 @@ private:
                          gnsszda<gnss> &zda) -> decltype(strm);
 };
 
-struct gpzda_traits {
-  static const std::string value;
-};
-
-struct gnzda_traits {
-  static const std::string value;
-};
-
-using gpzda = gnsszda<gpzda_traits>;
-using gnzda = gnsszda<gnzda_traits>;
+using gpzda = gnsszda<detail::char_sequence<'$', 'G', 'P', 'Z', 'D', 'A'>>;
+using gnzda = gnsszda<detail::char_sequence<'$', 'G', 'N', 'Z', 'D', 'A'>>;
 
 template <class stream_traits, class charT, class traits, class gnss>
 auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                 gnssgga<gnss> &gga) -> decltype(strm) {
-  return detail::extractor(strm, gnss::value, [&gga](const std::string &line) {
-    char alt_unit;
-    char diff_unit;
-    detail::nmea_scanner(
-        gnss::value, line, gga.utc_, gga.latitude_, gga.lat_cardinal_pt_,
-        gga.longitude_, gga.lon_cardinal_pt_, gga.fix_quality_,
-        gga.satellites_in_use_, gga.hdop_, gga.altitude_, alt_unit, gga.diff_,
-        diff_unit, gga.dgnss_age_, gga.dgnss_sid_);
+  return detail::extractor(
+      strm, detail::make_char_string_from_sequence(gnss{}),
+      [&gga](const std::string &line) {
+        char alt_unit;
+        char diff_unit;
+        detail::nmea_scanner(
+            detail::make_char_string_from_sequence(gnss{}), line, gga.utc_,
+            gga.latitude_, gga.lat_cardinal_pt_, gga.longitude_,
+            gga.lon_cardinal_pt_, gga.fix_quality_, gga.satellites_in_use_,
+            gga.hdop_, gga.altitude_, alt_unit, gga.diff_, diff_unit,
+            gga.dgnss_age_, gga.dgnss_sid_);
 
-  });
+      });
 }
 
 template <class stream_traits, class charT, class traits, class gnss>
 auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                 gnssgll<gnss> &gll) -> decltype(strm) {
-  return detail::extractor(strm, gnss::value, [&gll](const std::string &line) {
-    detail::nmea_scanner(gnss::value, line, gll.latitude_, gll.lat_cardinal_pt_,
-                         gll.longitude_, gll.lon_cardinal_pt_, gll.utc_,
-                         gll.status_, gll.mode_);
-  });
+  return detail::extractor(strm, detail::make_char_string_from_sequence(gnss{}),
+                           [&gll](const std::string &line) {
+                             detail::nmea_scanner(
+                                 detail::make_char_string_from_sequence(gnss{}),
+                                 line, gll.latitude_, gll.lat_cardinal_pt_,
+                                 gll.longitude_, gll.lon_cardinal_pt_, gll.utc_,
+                                 gll.status_, gll.mode_);
+                           });
 }
 
 template <class stream_traits, class charT, class traits, class gnss>
 auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                 gnssrmc<gnss> &rmc) -> decltype(strm) {
-  return detail::extractor(strm, gnss::value, [&rmc](const std::string &line) {
-    detail::nmea_scanner(gnss::value, line, rmc.utc_, rmc.status_,
-                         rmc.latitude_, rmc.lat_cardinal_pt_, rmc.longitude_,
-                         rmc.lon_cardinal_pt_, rmc.speed_, rmc.direction_,
-                         rmc.date_, rmc.declination_,
-                         rmc.declination_cardinal_pt_, rmc.mode_);
-  });
+  return detail::extractor(
+      strm, detail::make_char_string_from_sequence(gnss{}),
+      [&rmc](const std::string &line) {
+        detail::nmea_scanner(
+            detail::make_char_string_from_sequence(gnss{}), line, rmc.utc_,
+            rmc.status_, rmc.latitude_, rmc.lat_cardinal_pt_, rmc.longitude_,
+            rmc.lon_cardinal_pt_, rmc.speed_, rmc.direction_, rmc.date_,
+            rmc.declination_, rmc.declination_cardinal_pt_, rmc.mode_);
+      });
 }
 
 template <class stream_traits, class charT, class traits, class gnss>
@@ -795,10 +735,11 @@ auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
   char knots;
   char kilometers;
   return detail::extractor(
-      strm, gnss::value,
+      strm, detail::make_char_string_from_sequence(gnss{}),
       [&vtg, &direction_t, &declination_t, &knots, &kilometers](
           const std::string &line) {
-        detail::nmea_scanner(gnss::value, line, vtg.direction_, direction_t,
+        detail::nmea_scanner(detail::make_char_string_from_sequence(gnss{}),
+                             line, vtg.direction_, direction_t,
                              vtg.declination_, declination_t, vtg.speed_knots_,
                              knots, vtg.speed_kilometers_, kilometers,
                              vtg.mode_);
@@ -808,40 +749,48 @@ auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
 template <class stream_traits, class charT, class traits, class gnss>
 auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                 gnssgsa<gnss> &gsa) -> decltype(strm) {
-  return detail::extractor(strm, gnss::value, [&gsa](const std::string &line) {
-    detail::nmea_scanner(gnss::value, line, gsa.mode_, gsa.geometry_,
-                         gsa.sat_prn_[0], gsa.sat_prn_[1], gsa.sat_prn_[2],
-                         gsa.sat_prn_[3], gsa.sat_prn_[4], gsa.sat_prn_[5],
-                         gsa.sat_prn_[6], gsa.sat_prn_[7], gsa.sat_prn_[8],
-                         gsa.sat_prn_[9], gsa.sat_prn_[10], gsa.sat_prn_[11],
-                         gsa.pdop_, gsa.hdop_, gsa.vdop_);
-  });
+  return detail::extractor(
+      strm, detail::make_char_string_from_sequence(gnss{}),
+      [&gsa](const std::string &line) {
+        detail::nmea_scanner(
+            detail::make_char_string_from_sequence(gnss{}), line, gsa.mode_,
+            gsa.geometry_, gsa.sat_prn_[0], gsa.sat_prn_[1], gsa.sat_prn_[2],
+            gsa.sat_prn_[3], gsa.sat_prn_[4], gsa.sat_prn_[5], gsa.sat_prn_[6],
+            gsa.sat_prn_[7], gsa.sat_prn_[8], gsa.sat_prn_[9], gsa.sat_prn_[10],
+            gsa.sat_prn_[11], gsa.pdop_, gsa.hdop_, gsa.vdop_);
+      });
 }
 
 template <class stream_traits, class charT, class traits, class gnss>
 auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                 gnssgsv<gnss> &gsv) -> decltype(strm) {
-  return detail::extractor(strm, gnss::value, [&gsv](const std::string &line) {
-    detail::nmea_scanner(
-        gnss::value, line, gsv.count_, gsv.message_no_, gsv.satellites_in_view_,
-        gsv.satellite_info_[0].prn_, gsv.satellite_info_[0].elevation_,
-        gsv.satellite_info_[0].azimuth_, gsv.satellite_info_[0].snr_,
-        gsv.satellite_info_[1].prn_, gsv.satellite_info_[1].elevation_,
-        gsv.satellite_info_[1].azimuth_, gsv.satellite_info_[1].snr_,
-        gsv.satellite_info_[2].prn_, gsv.satellite_info_[2].elevation_,
-        gsv.satellite_info_[2].azimuth_, gsv.satellite_info_[2].snr_,
-        gsv.satellite_info_[3].prn_, gsv.satellite_info_[3].elevation_,
-        gsv.satellite_info_[3].azimuth_, gsv.satellite_info_[3].snr_);
-  });
+  return detail::extractor(
+      strm, detail::make_char_string_from_sequence(gnss{}),
+      [&gsv](const std::string &line) {
+        detail::nmea_scanner(
+            detail::make_char_string_from_sequence(gnss{}), line, gsv.count_,
+            gsv.message_no_, gsv.satellites_in_view_,
+            gsv.satellite_info_[0].prn_, gsv.satellite_info_[0].elevation_,
+            gsv.satellite_info_[0].azimuth_, gsv.satellite_info_[0].snr_,
+            gsv.satellite_info_[1].prn_, gsv.satellite_info_[1].elevation_,
+            gsv.satellite_info_[1].azimuth_, gsv.satellite_info_[1].snr_,
+            gsv.satellite_info_[2].prn_, gsv.satellite_info_[2].elevation_,
+            gsv.satellite_info_[2].azimuth_, gsv.satellite_info_[2].snr_,
+            gsv.satellite_info_[3].prn_, gsv.satellite_info_[3].elevation_,
+            gsv.satellite_info_[3].azimuth_, gsv.satellite_info_[3].snr_);
+      });
 }
 
 template <class stream_traits, class charT, class traits, class gnss>
 auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                 gnsszda<gnss> &zda) -> decltype(strm) {
-  return detail::extractor(strm, gnss::value, [&zda](const std::string &line) {
-    detail::nmea_scanner(gnss::value, line, zda.utc_, zda.day_, zda.month_,
-                         zda.year_, zda.tz_hours_, zda.tz_minutes_);
-  });
+  return detail::extractor(strm, detail::make_char_string_from_sequence(gnss{}),
+                           [&zda](const std::string &line) {
+                             detail::nmea_scanner(
+                                 detail::make_char_string_from_sequence(gnss{}),
+                                 line, zda.utc_, zda.day_, zda.month_,
+                                 zda.year_, zda.tz_hours_, zda.tz_minutes_);
+                           });
 }
 
 template <class stream_traits, class charT, class traits>

@@ -411,31 +411,5 @@ std::string skytraq_stream_traits::off() noexcept {
 std::string skytraq_stream_traits::release() noexcept {
   return detail::SKYTRAQ_Q_RELEASE;
 }
-
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wexit-time-destructors"
-#pragma clang diagnostic ignored "-Wglobal-constructors"
-#endif
-const std::string bdgsa_traits::value = "$BDGSA";
-const std::string bdgsv_traits::value = "$BDGSV";
-const std::string glgsa_traits::value = "$GLGSA";
-const std::string glgsv_traits::value = "$GLGSV";
-const std::string gngga_traits::value = "$GNGGA";
-const std::string gngll_traits::value = "$GNGLL";
-const std::string gngsa_traits::value = "$GNGSA";
-const std::string gnrmc_traits::value = "$GNRMC";
-const std::string gnvtg_traits::value = "$GNVTG";
-const std::string gnzda_traits::value = "$GNZDA";
-const std::string gpgga_traits::value = "$GPGGA";
-const std::string gpgll_traits::value = "$GPGLL";
-const std::string gpgsa_traits::value = "$GPGSA";
-const std::string gpgsv_traits::value = "$GPGSV";
-const std::string gprmc_traits::value = "$GPRMC";
-const std::string gpvtg_traits::value = "$GPVTG";
-const std::string gpzda_traits::value = "$GPZDA";
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
 }
 }
