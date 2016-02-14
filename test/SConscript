@@ -4,14 +4,9 @@
 
 Import('env')
 
-if not GetOption('clang-format') :
+localEnv = env.Clone()
 
-    localEnv = env.Clone()
+localEnv.AppendUnique(LIBS = 'riot')
+localEnv.Append(LINKFLAGS = '-Wno-maybe-uninitialized')
 
-    localEnv.AppendUnique(LIBS = 'riot')
-    localEnv.Append(LINKFLAGS = '-Wno-maybe-uninitialized')
-
-    unitTest = localEnv.AddUnitTest('nmea_reader', 'nmea_reader.cpp')
-else :
-    env.ClangFormat('', Glob('*.cpp'))
-
+unitTest = localEnv.AddUnitTest('nmea_reader', 'nmea_reader.cpp')

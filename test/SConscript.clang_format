@@ -1,0 +1,7 @@
+#
+# Copyright (C) 2015-2016 Cryogenic Graphics Ltd
+#
+
+Import('env')
+
+env.ClangFormat('', Glob('*.cpp'))

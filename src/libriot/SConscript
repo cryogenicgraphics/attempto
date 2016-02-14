@@ -4,11 +4,7 @@
 
 Import('env')
 
-if not env.GetOption('clang-format') :
-    env.StaticLibrary('riot', Glob('*.cpp'))
-else :
-    env.ClangFormat('', Glob('*.cpp') + Glob('*.hpp') + Glob('detail/*.hpp'))
+env.StaticLibrary('riot', Glob('*.cpp'))
 
 env.AppendUnique(CPPPATH = '#/' + env['VariantDir'] + '/include')
 env.AppendUnique(LIBPATH = '#/' + env['VariantDir'])
-

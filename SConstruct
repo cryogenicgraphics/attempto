@@ -394,7 +394,11 @@ SConsEnvironment.AddUnitTest = AddUnitTest
 def SConscript_(path, variant_dir) :
     SConscript(path, variant_dir = variant_dir, duplicate = 0, exports = 'env')
 
-SConscript_('src/libriot/SConscript.includes', variant_dir = env['VariantDir'])
-SConscript_('src/libriot/SConscript', variant_dir = env['VariantDir'])
-SConscript_('test/reference/SConscript', variant_dir = 'build/test')
-SConscript_('test/SConscript', variant_dir = 'build/test/nmea_reader')
+if env.GetOption('clang-format') :
+  SConscript_('src/libriot/SConscript.clang_format', env['VariantDir'])
+  SConscript_('test/SConscript.clang_format', env['VariantDir'])
+else :
+  SConscript_('src/libriot/SConscript.includes', env['VariantDir'])
+  SConscript_('src/libriot/SConscript', env['VariantDir'])
+  SConscript_('test/reference/SConscript', 'build/test')
+  SConscript_('test/SConscript', 'build/test/nmea_reader')
