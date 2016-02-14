@@ -215,7 +215,7 @@ custom_tests = {'CheckForCpp14'                 : CheckForCpp14,
                 'CheckDefaultClangVersion'      : CheckDefaultClangVersion,
                 'CheckClang36Version'           : CheckClang36Version,}
 
-if not env.GetOption('clean') :
+if not env.GetOption('clean') and not env.GetOption('clang-format') :
     conf = Configure(env, custom_tests = custom_tests)
 
     if not GetOption('clang') :
