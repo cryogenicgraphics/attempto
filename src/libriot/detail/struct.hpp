@@ -421,7 +421,7 @@ private:
 };
 }
 
-template <class T> class gnssgga final {
+template <typename T> class gnssgga final {
 public:
   constexpr gnssgga() = default;
 
@@ -460,8 +460,8 @@ private:
   cardinal_point lat_cardinal_pt_{cardinal_point::north};
   cardinal_point lon_cardinal_pt_{cardinal_point::west};
 
-  template <class stream_traits, class charT, class traits,
-            template <class> class gnss>
+  template <typename stream_traits, typename charT, typename traits,
+            template <typename> class gnss>
   friend auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                          gnss<T> &gga) -> decltype(strm) {
     return detail::extractor(
@@ -483,7 +483,7 @@ private:
 using gpgga = gnssgga<detail::char_sequence<'$', 'G', 'P', 'G', 'G', 'A'>>;
 using gngga = gnssgga<detail::char_sequence<'$', 'G', 'N', 'G', 'G', 'A'>>;
 
-template <class T> class gnssgll final {
+template <typename T> class gnssgll final {
 public:
   constexpr gnssgll() = default;
 
@@ -508,8 +508,8 @@ private:
   cardinal_point lon_cardinal_pt_{cardinal_point::west};
   status status_{status::inactive};
 
-  template <class stream_traits, class charT, class traits,
-            template <class> class gnss>
+  template <typename stream_traits, typename charT, typename traits,
+            template <typename> class gnss>
   friend auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                          gnss<T> &gll) -> decltype(strm) {
     return detail::extractor(strm, detail::make_char_string_from_sequence(T{}),
@@ -526,7 +526,7 @@ private:
 using gpgll = gnssgll<detail::char_sequence<'$', 'G', 'P', 'G', 'L', 'L'>>;
 using gngll = gnssgll<detail::char_sequence<'$', 'G', 'N', 'G', 'L', 'L'>>;
 
-template <class T> class gnssgsa final {
+template <typename T> class gnssgsa final {
 public:
   constexpr gnssgsa() = default;
 
@@ -545,8 +545,8 @@ private:
   fix_mode mode_{fix_mode::manual};
   fix_geometry geometry_{fix_geometry::invalid};
 
-  template <class stream_traits, class charT, class traits,
-            template <class> class gnss>
+  template <typename stream_traits, typename charT, typename traits,
+            template <typename> class gnss>
   friend auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                          gnss<T> &gsa) -> decltype(strm) {
     return detail::extractor(
@@ -568,7 +568,7 @@ using glgsa = gnssgsa<detail::char_sequence<'$', 'G', 'L', 'G', 'S', 'A'>>;
 using gngsa = gnssgsa<detail::char_sequence<'$', 'G', 'N', 'G', 'S', 'A'>>;
 using gpgsa = gnssgsa<detail::char_sequence<'$', 'G', 'P', 'G', 'S', 'A'>>;
 
-template <class T> class gnssgsv final {
+template <typename T> class gnssgsv final {
 public:
   class satellite_info {
   public:
@@ -585,8 +585,8 @@ public:
     short prn_{0};
     short snr_{0};
 
-    template <class stream_traits, class charT, class traits,
-              template <class> class gnss>
+    template <typename stream_traits, typename charT, typename traits,
+              template <typename> class gnss>
     friend auto
     operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                gnss<T> &gsv) -> decltype(strm);
@@ -609,8 +609,8 @@ private:
   short message_no_{-1};
   short satellites_in_view_{0};
 
-  template <class stream_traits, class charT, class traits,
-            template <class> class gnss>
+  template <typename stream_traits, typename charT, typename traits,
+            template <typename> class gnss>
   friend auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                          gnss<T> &gsv) -> decltype(strm) {
     return detail::extractor(
@@ -635,7 +635,7 @@ using bdgsv = gnssgsv<detail::char_sequence<'$', 'B', 'D', 'G', 'S', 'V'>>;
 using gpgsv = gnssgsv<detail::char_sequence<'$', 'G', 'P', 'G', 'S', 'V'>>;
 using glgsv = gnssgsv<detail::char_sequence<'$', 'G', 'L', 'G', 'S', 'V'>>;
 
-template <class T> class gnssrmc final {
+template <typename T> class gnssrmc final {
 public:
   constexpr gnssrmc() = default;
 
@@ -676,8 +676,8 @@ private:
   cardinal_point declination_cardinal_pt_{cardinal_point::west};
   status status_{status::inactive};
 
-  template <class stream_traits, class charT, class traits,
-            template <class> class gnss>
+  template <typename stream_traits, typename charT, typename traits,
+            template <typename> class gnss>
   friend auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                          gnss<T> &rmc) -> decltype(strm) {
     return detail::extractor(
@@ -695,7 +695,7 @@ private:
 using gprmc = gnssrmc<detail::char_sequence<'$', 'G', 'P', 'R', 'M', 'C'>>;
 using gnrmc = gnssrmc<detail::char_sequence<'$', 'G', 'N', 'R', 'M', 'C'>>;
 
-template <class T> class gnssvtg final {
+template <typename T> class gnssvtg final {
 public:
   constexpr gnssvtg() = default;
 
@@ -714,8 +714,8 @@ private:
   float speed_kilometers_{0.0f};
   fix_type mode_{fix_type::not_valid};
 
-  template <class stream_traits, class charT, class traits,
-            template <class> class gnss>
+  template <typename stream_traits, typename charT, typename traits,
+            template <typename> class gnss>
   friend auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                          gnss<T> &vtg) -> decltype(strm) {
     char direction_t;
@@ -737,7 +737,7 @@ private:
 using gpvtg = gnssvtg<detail::char_sequence<'$', 'G', 'P', 'V', 'T', 'G'>>;
 using gnvtg = gnssvtg<detail::char_sequence<'$', 'G', 'N', 'V', 'T', 'G'>>;
 
-template <class T> class gnsszda final {
+template <typename T> class gnsszda final {
 public:
   constexpr gnsszda() = default;
 
@@ -756,8 +756,8 @@ private:
   short tz_minutes_{0};
   short year_{0};
 
-  template <class stream_traits, class charT, class traits,
-            template <class> class gnss>
+  template <typename stream_traits, typename charT, typename traits,
+            template <typename> class gnss>
   friend auto operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                          gnss<T> &zda) -> decltype(strm) {
     return detail::extractor(strm, detail::make_char_string_from_sequence(T{}),
@@ -773,7 +773,7 @@ private:
 using gpzda = gnsszda<detail::char_sequence<'$', 'G', 'P', 'Z', 'D', 'A'>>;
 using gnzda = gnsszda<detail::char_sequence<'$', 'G', 'N', 'Z', 'D', 'A'>>;
 
-template <class stream_traits, class charT, class traits>
+template <typename stream_traits, typename charT, typename traits>
 auto skytraq::operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                          skytraq::version &ver) -> decltype(strm) {
   while (strm) {
@@ -796,7 +796,7 @@ auto skytraq::operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
   return strm;
 }
 
-template <class stream_traits, class charT, class traits>
+template <typename stream_traits, typename charT, typename traits>
 auto skytraq::operator>>(basic_gnss_istream<stream_traits, charT, traits> &strm,
                          skytraq::navigation_data &nd) -> decltype(strm) {
   while (strm) {
