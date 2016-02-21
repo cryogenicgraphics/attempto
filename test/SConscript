@@ -6,7 +6,8 @@ Import('env')
 
 localEnv = env.Clone()
 
-localEnv.AppendUnique(LIBS = 'riot')
+localEnv.AppendUnique(LIBS = ['riot', 'boost_program_options'])
 localEnv.Append(LINKFLAGS = '-Wno-maybe-uninitialized')
 
-unitTest = localEnv.AddUnitTest('nmea_reader', 'nmea_reader.cpp')
+localEnv.AddUnitTest('nmea_reader', 'nmea_reader.cpp')
+localEnv.Program('gpscontrol', 'gpscontrol.cpp')
