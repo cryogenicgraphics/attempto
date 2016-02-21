@@ -84,14 +84,14 @@ def CheckCompiler(context, message, executable) :
 def CheckDefaultGCCVersion(context) :
     return CheckCompiler(context, 'Checking for GCC version...', 'gcc')
 
-def CheckGCC5Version(context) :
-    return CheckCompiler(context, 'Checking for GCC-5...', 'gcc-5')
+def CheckGCC6Version(context) :
+    return CheckCompiler(context, 'Checking for GCC-6...', 'gcc-6')
 
 def CheckDefaultClangVersion(context) :
     return CheckCompiler(context, 'Checking for clang version...', 'clang')
 
-def CheckClang36Version(context) :
-    return CheckCompiler(context, 'Checking for clang 3.6...', 'clang-3.6')
+def CheckClang38Version(context) :
+    return CheckCompiler(context, 'Checking for clang 3.8...', 'clang-3.8')
 
 def CheckForReservedCFunc(context, function) :
     reservedFuncs = {'fmod'    : ('math', 'float f = 0.0f', 'f = fmod', 'f, 1.0'),
@@ -127,15 +127,15 @@ AddOptions()
 
 defaultEnv = DefaultEnvironment(ENV = os.environ)
 
-commonCXXFlags = ['-fomit-frame-pointer',
+commonCXXFlags = ['-D_GLIBCXX_USE_CXX11_ABI=1',
+                  '-fomit-frame-pointer',
                   '-fno-math-errno',
                   '-funsigned-char',
                   '-pthread',
                   '-Werror',
                   '-Wsign-conversion',]
 
-defaultCXXFlagsGCC = ['-D_GLIBCXX_USE_CXX11_ABI=1',
-                      '-flto=jobserver',
+defaultCXXFlagsGCC = ['-flto=jobserver',
                       '-ftree-vectorizer-verbose=1',
                       '-fuse-ld=gold',
                       '-fuse-linker-plugin',
@@ -211,9 +211,9 @@ custom_tests = {'CheckForCpp14'                 : CheckForCpp14,
                 'CheckForLTOODRTypeMerging'     : CheckForLTOODRTypeMerging,
                 'CheckForIntelCPU'              : CheckForIntelCPU,
                 'CheckDefaultGCCVersion'        : CheckDefaultGCCVersion,
-                'CheckGCC5Version'              : CheckGCC5Version,
+                'CheckGCC6Version'              : CheckGCC6Version,
                 'CheckDefaultClangVersion'      : CheckDefaultClangVersion,
-                'CheckClang36Version'           : CheckClang36Version,}
+                'CheckClang38Version'           : CheckClang38Version,}
 
 if not env.GetOption('clean') and not env.GetOption('clang-format') :
     conf = Configure(env, custom_tests = custom_tests)
@@ -224,21 +224,21 @@ if not env.GetOption('clean') and not env.GetOption('clang-format') :
         env.Replace(AR = 'gcc-ar')
         env.Replace(RANLIB = 'gcc-ranlib')
 
-        if not gccversion or not gccversion.split('.')[0] >= '5' :
-            gccversion = conf.CheckGCC5Version()
+        if not gccversion or not gccversion.split('.')[0] >= '6' :
+            gccversion = conf.CheckGCC6Version()
             if gccversion :
-                env.Replace(CPP = 'cpp-5')
-                env.Replace(CC  = 'gcc-5')
-                env.Replace(CXX = 'g++-5')
-                env.Replace(AR = 'gcc-ar-5')
-                env.Replace(RANLIB = 'gcc-ranlib-5')
+                env.Replace(CPP = 'cpp-6')
+                env.Replace(CC  = 'gcc-6')
+                env.Replace(CXX = 'g++-6')
+                env.Replace(AR = 'gcc-ar-6')
+                env.Replace(RANLIB = 'gcc-ranlib-6')
     else :
         clangversion = conf.CheckDefaultClangVersion()
-        if not clangversion or not clangversion.split('.')[1] >= '6' :
-            clangversion = conf.CheckClang36Version()
+        if not clangversion or not clangversion.split('.')[1] >= '8' :
+            clangversion = conf.CheckClang38Version()
             if clangversion :
-                env.Replace(CC  = 'clang-3.6')
-                env.Replace(CXX = 'clang++-3.6')
+                env.Replace(CC  = 'clang-3.8')
+                env.Replace(CXX = 'clang++-3.8')
         else :
             env.Replace(CC  = 'clang')
             env.Replace(CXX = 'clang++')

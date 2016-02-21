@@ -10,4 +10,6 @@ localEnv.AppendUnique(LIBS = ['riot', 'boost_program_options'])
 localEnv.Append(LINKFLAGS = '-Wno-maybe-uninitialized')
 
 localEnv.AddUnitTest('nmea_reader', 'nmea_reader.cpp')
-localEnv.Program('gpscontrol', 'gpscontrol.cpp')
+
+if not GetOption('clang') :
+  localEnv.Program('gpscontrol', 'gpscontrol.cpp')
