@@ -134,7 +134,7 @@ commonCXXFlags = ['-fomit-frame-pointer',
                   '-Werror',
                   '-Wsign-conversion',]
 
-defaultCXXFlagsGCC = ['-D_GLIBCXX_USE_CXX11_ABI=0',
+defaultCXXFlagsGCC = ['-D_GLIBCXX_USE_CXX11_ABI=1',
                       '-flto=jobserver',
                       '-ftree-vectorizer-verbose=1',
                       '-fuse-ld=gold',
