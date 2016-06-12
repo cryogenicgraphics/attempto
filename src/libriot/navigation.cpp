@@ -240,7 +240,8 @@ ssize_t serial_port_read(int descriptor, char *buffer) {
         continue;
       }
       char len[2];
-      if (read(descriptor, len, sizeof(len)) != sizeof(len)) {
+      if (read(descriptor, len, sizeof(len)) !=
+          static_cast<ssize_t>(sizeof(len))) {
         continue;
       }
 
