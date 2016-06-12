@@ -84,11 +84,17 @@ def CheckCompiler(context, message, executable) :
 def CheckDefaultGCCVersion(context) :
     return CheckCompiler(context, 'Checking for GCC version...', 'gcc')
 
+def CheckGCC5Version(context) :
+    return CheckCompiler(context, 'Checking for GCC-5...', 'gcc-5')
+
 def CheckGCC6Version(context) :
     return CheckCompiler(context, 'Checking for GCC-6...', 'gcc-6')
 
 def CheckDefaultClangVersion(context) :
     return CheckCompiler(context, 'Checking for clang version...', 'clang')
+
+def CheckClang37Version(context) :
+    return CheckCompiler(context, 'Checking for clang 3.7...', 'clang-3.7')
 
 def CheckClang38Version(context) :
     return CheckCompiler(context, 'Checking for clang 3.8...', 'clang-3.8')
@@ -211,8 +217,10 @@ custom_tests = {'CheckForCpp14'                 : CheckForCpp14,
                 'CheckForLTOODRTypeMerging'     : CheckForLTOODRTypeMerging,
                 'CheckForIntelCPU'              : CheckForIntelCPU,
                 'CheckDefaultGCCVersion'        : CheckDefaultGCCVersion,
+                'CheckGCC5Version'              : CheckGCC5Version,
                 'CheckGCC6Version'              : CheckGCC6Version,
                 'CheckDefaultClangVersion'      : CheckDefaultClangVersion,
+                'CheckClang37Version'           : CheckClang37Version,
                 'CheckClang38Version'           : CheckClang38Version,}
 
 if not env.GetOption('clean') and not env.GetOption('clang-format') :
@@ -225,13 +233,15 @@ if not env.GetOption('clean') and not env.GetOption('clang-format') :
         env.Replace(RANLIB = 'gcc-ranlib')
 
         if not gccversion or not gccversion.split('.')[0] >= '6' :
-            gccversion = conf.CheckGCC6Version()
-            if gccversion :
-                env.Replace(CPP = 'cpp-6')
-                env.Replace(CC  = 'gcc-6')
-                env.Replace(CXX = 'g++-6')
-                env.Replace(AR = 'gcc-ar-6')
-                env.Replace(RANLIB = 'gcc-ranlib-6')
+            for version, versionCheck in [('6', conf.CheckGCC6Version), ('5', conf.CheckGCC5Version)] :
+                gccversion = versionCheck()
+                if gccversion :
+                    env.Replace(CPP = 'cpp-%s' % version)
+                    env.Replace(CC  = 'gcc-%s' % version)
+                    env.Replace(CXX = 'g++-%s' % version)
+                    env.Replace(AR = 'gcc-ar-%s' % version)
+                    env.Replace(RANLIB = 'gcc-ranlib-%s' % version)
+                    break
     else :
         clangversion = conf.CheckDefaultClangVersion()
         if not clangversion or not clangversion.split('.')[1] >= '8' :
